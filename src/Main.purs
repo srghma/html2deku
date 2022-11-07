@@ -32,14 +32,21 @@ import Tidy.Codegen (binaryOp, exprApp, exprArray, exprIdent, exprOp, exprString
 import Web.HTML.HTMLTextAreaElement (value)
 import Yarn (capitalize)
 
-dekuize :: String -> String
-dekuize i = o
+dekuizeU :: String -> String
+dekuizeU = dekuize true
+
+dekuizeL :: String -> String
+dekuizeL = dekuize false
+
+dekuize :: Boolean -> String -> String
+dekuize ul i = o
   where
   splt = split (Pattern "-") i
   uc = uncons splt
   o = case uc of
     Nothing -> ""
-    Just { head, tail } -> intercalate "" ([head] <> map capitalize tail)
+    Just { head, tail } -> intercalate ""
+      ([ (if ul then capitalize else identity) head ] <> map capitalize tail)
 
 ugggh :: String
 ugggh = "z4flx0"
@@ -62,30 +69,33 @@ toDeku l = replaceAll (Pattern ugggh) (Replacement "") $ print plainText
   go (HtmlElement { name, attributes, children }) = Just $ unsafePartial $
     exprApp
       ( exprIdent
-          ( "D." <> dekuize name <> case attributes of
+          ( "D." <> dekuizeL name <> case attributes of
               Nil -> "_"
               _ -> ""
           )
       )
-      ( ( case attributes of
-            Nil -> []
-            Cons (HtmlAttribute k v) Nil ->
-              [ exprOp
-                  (exprIdent ("D." <> ugggh <> capitalize (dekuize k)))
+      ( ( let
+            transAp (HtmlAttribute k' v) =
+              let
+                k = if k' == "type" then "xtype" else k'
+              in
+                exprOp
+                  (exprIdent ("D." <> ugggh <> dekuizeU k))
                   [ binaryOp "!:=" (exprString v) ]
-              ]
-            _ ->
-              [ exprApp (exprIdent "oneOf")
-                  [ exprArray $ A.fromFoldable
-                      ( map
-                          ( \(HtmlAttribute k v) -> exprOp
-                              (exprIdent ("D." <> ugggh <> capitalize (dekuize k)))
-                              [ binaryOp "!:=" (exprString v) ]
-                          )
-                          attributes
-                      )
-                  ]
-              ]
+          in
+            case attributes of
+              Nil -> []
+              Cons ha Nil ->
+                [ transAp ha ]
+              _ ->
+                [ exprApp (exprIdent "oneOf")
+                    [ exprArray $ A.fromFoldable
+                        ( map
+                            transAp
+                            attributes
+                        )
+                    ]
+                ]
         ) <>
           [ exprArray (compact (map go (A.fromFoldable children))) ]
       )

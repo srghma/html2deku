@@ -22,9 +22,7 @@ export const humanizeImpl = function(x, l) {
   return inflection.humanize(x,l);
 }
 
-export const capitalize = function capitalizeImpl (x) {
-  return inflection.capitalize(x);
-};
+export const capitalize =  (x) =>inflection.capitalize(x);
 
 export const titleize = function titleizeImpl (x) {
   return inflection.titleize(x);
