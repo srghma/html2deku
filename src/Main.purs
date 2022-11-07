@@ -102,6 +102,7 @@ toDeku l = replaceAll (Pattern ugggh) (Replacement "") $ print plainText
 initialTxt :: String
 initialTxt =
   """<div>
+  <button id="my-button" class="p-4">press me</button>
   <span class="text-slate:700">hello world!</span>
 </div>"""
 
