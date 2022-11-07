@@ -5,14 +5,14 @@ module Main
 
 import Prelude
 
+import Data.Array (intercalate, uncons)
 import Data.Array as A
 import Data.Compactable (compact)
 import Data.Either (Either(..))
 import Data.Foldable (oneOf)
 import Data.List (List(..))
 import Data.Maybe (Maybe(..))
-import Data.String (Pattern(..), Replacement(..), replaceAll)
-import Data.String.Extra (camelCase)
+import Data.String (Pattern(..), Replacement(..), replaceAll, split)
 import Data.Tuple.Nested ((/\))
 import Deku.Attribute ((!:=), (:=))
 import Deku.Control (text_)
@@ -31,6 +31,15 @@ import Tidy (FormatOptions, defaultFormatOptions, formatExpr, toDoc)
 import Tidy.Codegen (binaryOp, exprApp, exprArray, exprIdent, exprOp, exprString)
 import Web.HTML.HTMLTextAreaElement (value)
 import Yarn (capitalize)
+
+dekuize :: String -> String
+dekuize i = o
+  where
+  splt = split (Pattern "-") i
+  uc = uncons splt
+  o = case uc of
+    Nothing -> ""
+    Just { head, tail } -> intercalate "" ([head] <> map capitalize tail)
 
 ugggh :: String
 ugggh = "z4flx0"
@@ -53,7 +62,7 @@ toDeku l = replaceAll (Pattern ugggh) (Replacement "") $ print plainText
   go (HtmlElement { name, attributes, children }) = Just $ unsafePartial $
     exprApp
       ( exprIdent
-          ( "D." <> camelCase name <> case attributes of
+          ( "D." <> dekuize name <> case attributes of
               Nil -> "_"
               _ -> ""
           )
@@ -62,7 +71,7 @@ toDeku l = replaceAll (Pattern ugggh) (Replacement "") $ print plainText
             Nil -> []
             Cons (HtmlAttribute k v) Nil ->
               [ exprOp
-                  (exprIdent ("D." <> ugggh <> capitalize k))
+                  (exprIdent ("D." <> ugggh <> capitalize (dekuize k)))
                   [ binaryOp "!:=" (exprString v) ]
               ]
             _ ->
@@ -70,7 +79,7 @@ toDeku l = replaceAll (Pattern ugggh) (Replacement "") $ print plainText
                   [ exprArray $ A.fromFoldable
                       ( map
                           ( \(HtmlAttribute k v) -> exprOp
-                              (exprIdent ("D." <> ugggh <> capitalize k))
+                              (exprIdent ("D." <> ugggh <> capitalize (dekuize k)))
                               [ binaryOp "!:=" (exprString v) ]
                           )
                           attributes
