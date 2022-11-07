@@ -28,7 +28,7 @@ import HalogenParser as HalogenParser
 import Partial.Unsafe (unsafePartial)
 import Swal (swal)
 import Tidy (FormatOptions, defaultFormatOptions, formatExpr, toDoc)
-import Tidy.Codegen (binaryOp, exprApp, exprArray, exprIdent, exprOp, exprString)
+import Tidy.Codegen (binaryOp, exprApp, exprArray, exprCtor, exprIdent, exprOp, exprString)
 import Web.HTML.HTMLTextAreaElement (value)
 import Yarn (capitalize)
 
@@ -48,11 +48,8 @@ dekuize ul i = o
     Just { head, tail } -> intercalate ""
       ([ (if ul then capitalize else identity) head ] <> map capitalize tail)
 
-ugggh :: String
-ugggh = "z4flx0"
-
 toDeku :: List HtmlNode -> String
-toDeku l = replaceAll (Pattern ugggh) (Replacement "") $ print plainText
+toDeku l = print plainText
   twoSpaces
   ( toDoc
       ( formatExpr (defaultFormatOptions :: FormatOptions Void _)
@@ -85,7 +82,7 @@ toDeku l = replaceAll (Pattern ugggh) (Replacement "") $ print plainText
                   k = if k' == "type" then "xtype" else k'
                 in
                   exprOp
-                    (exprIdent ("D." <> ugggh <> dekuizeU k))
+                    (exprCtor ("D." <> dekuizeU k))
                     [ binaryOp "!:=" (exprString v) ]
           in
             case attributes of
