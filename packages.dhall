@@ -10,6 +10,20 @@ with hyrule =
     , repo = "https://github.com/mikesol/purescript-hyrule.git"
     , version = "v2.3.3"
     }
+  with tidy =
+    { dependencies =
+      [ "maybe"
+      ]
+    , repo = "https://github.com/natefaubion/purescript-tidy.git"
+    , version = "v0.9.0"
+    }
+  with tidy-codegen =
+    { dependencies =
+      [ "language-cst-parser", "tidy"
+      ]
+    , repo = "https://github.com/natefaubion/purescript-tidy-codegen.git"
+    , version = "v3.0.0"
+    }
   with deku =
     { dependencies =
       [ "aff"

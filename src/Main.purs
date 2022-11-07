@@ -1,30 +1,118 @@
-module Main where
+module Main
+  ( main
+  , toDeku
+  ) where
 
 import Prelude
 
+import Data.Array as A
+import Data.Compactable (compact)
+import Data.Either (Either(..))
 import Data.Foldable (oneOf)
+import Data.List (List(..))
+import Data.Maybe (Maybe(..))
+import Data.String (Pattern(..), Replacement(..), replaceAll)
+import Data.String.Extra (camelCase)
 import Data.Tuple.Nested ((/\))
 import Deku.Attribute ((!:=), (:=))
 import Deku.Control (text_)
 import Deku.DOM as D
 import Deku.Do (useState')
 import Deku.Do as Deku
-import Deku.Listeners (click_)
+import Deku.Listeners (click)
 import Deku.Toplevel (runInBody)
+import Dodo (plainText, print, twoSpaces)
 import Effect (Effect)
+import HalogenParser (HtmlAttribute(..), HtmlNode(..))
 import HalogenParser as HalogenParser
+import Partial.Unsafe (unsafePartial)
+import Swal (swal)
+import Tidy (FormatOptions, defaultFormatOptions, formatExpr, toDoc)
+import Tidy.Codegen (binaryOp, exprApp, exprArray, exprIdent, exprOp, exprString)
 import Web.HTML.HTMLTextAreaElement (value)
+import Yarn (capitalize)
+
+ugggh :: String
+ugggh = "z4flx0"
+
+toDeku :: List HtmlNode -> String
+toDeku l = replaceAll (Pattern ugggh) (Replacement "") $ print plainText
+  twoSpaces
+  ( toDoc
+      ( formatExpr (defaultFormatOptions :: FormatOptions Void _)
+          case l of
+            Nil -> exprArray []
+            Cons a Nil -> case go a of
+              Just x -> x
+              Nothing -> exprArray []
+            _ -> unsafePartial $ exprApp (exprIdent "fixed")
+              [ exprArray (compact (map go (A.fromFoldable l))) ]
+      )
+  )
+  where
+  go (HtmlElement { name, attributes, children }) = Just $ unsafePartial $
+    exprApp
+      ( exprIdent
+          ( "D." <> camelCase name <> case attributes of
+              Nil -> "_"
+              _ -> ""
+          )
+      )
+      ( ( case attributes of
+            Nil -> []
+            Cons (HtmlAttribute k v) Nil ->
+              [ exprOp
+                  (exprIdent ("D." <> ugggh <> capitalize k))
+                  [ binaryOp "!:=" (exprString v) ]
+              ]
+            _ ->
+              [ exprApp (exprIdent "oneOf")
+                  [ exprArray $ A.fromFoldable
+                      ( map
+                          ( \(HtmlAttribute k v) -> exprOp
+                              (exprIdent ("D." <> ugggh <> capitalize k))
+                              [ binaryOp "!:=" (exprString v) ]
+                          )
+                          attributes
+                      )
+                  ]
+              ]
+        ) <>
+          [ exprArray (compact (map go (A.fromFoldable children))) ]
+      )
+  go (HtmlText str) =
+    let
+      nw = replaceAll (Pattern "\n") (Replacement "")
+        (replaceAll (Pattern " ") (Replacement "") str)
+    in
+      if nw == "" then Nothing
+      else Just
+        (unsafePartial $ exprApp (exprIdent "text_") [ exprString str ])
+  go (HtmlComment _) = Nothing
+
+initialTxt :: String
+initialTxt =
+  """<div>
+  <span class="text-slate:700">hello world!</span>
+</div>"""
 
 main :: Effect Unit
 main = runInBody Deku.do
-  doCompile /\ compile <- useState'
   setPurs /\ purs <- useState'
-  D.div (oneOf [ pure (D.Class := "w-full"), click_ (doCompile unit) ])
+  setInput /\ input <- useState'
+  D.div
+    (oneOf [ D.Class !:= "w-full" ])
     [ D.span (oneOf [ D.Class !:= "text-xl" ]) [ text_ "html2deku" ]
     , D.button
         ( oneOf
             [ D.Class !:=
                 "ml-2 inline-flex items-center rounded border border-transparent bg-indigo-600 px-2.5 py-1.5 text-xs font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+            , click $ input <#> \i -> do
+                v <- value i
+                let parsed = HalogenParser.parse v
+                case parsed of
+                  Left err -> swal { title: "Uh oh...", text: show err }
+                  Right res -> setPurs (toDeku res)
             ]
         )
         [ text_ "Convert >" ]
@@ -34,12 +122,10 @@ main = runInBody Deku.do
             ( oneOf
                 [ D.Rows !:= "20"
                 , D.Class !:= "border-2"
-                , compile <#> \_ -> D.SelfT := \i -> do
-                  v <- value i
-                  setPurs (show (HalogenParser.parse v))
+                , D.SelfT !:= setInput
                 ]
             )
-            []
+            [ text_ initialTxt ]
         , D.textarea
             ( oneOf
                 [ D.Rows !:= "20"
@@ -47,6 +133,12 @@ main = runInBody Deku.do
                 , purs <#> (D.Value := _)
                 ]
             )
-            []
+            ( let
+                parsed = HalogenParser.parse initialTxt
+              in
+                case parsed of
+                  Left _ -> []
+                  Right res -> [ text_ (toDeku res) ]
+            )
         ]
     ]
