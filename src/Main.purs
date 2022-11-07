@@ -12,7 +12,7 @@ import Data.Either (Either(..))
 import Data.Foldable (oneOf)
 import Data.List (List(..))
 import Data.Maybe (Maybe(..))
-import Data.String (Pattern(..), Replacement(..), replaceAll, split)
+import Data.String (Pattern(..), Replacement(..), replaceAll, split, drop, take)
 import Data.Tuple.Nested ((/\))
 import Deku.Attribute ((!:=), (:=))
 import Deku.Control (text_)
@@ -76,12 +76,15 @@ toDeku l = replaceAll (Pattern ugggh) (Replacement "") $ print plainText
       )
       ( ( let
             transAp (HtmlAttribute k' v) =
-              let
-                k = if k' == "type" then "xtype" else k'
-              in
-                exprOp
-                  (exprIdent ("D." <> ugggh <> dekuizeU k))
-                  [ binaryOp "!:=" (exprString v) ]
+              if take 5 k' == "data-" then exprApp (exprIdent "xdata")
+                [ exprString $ drop 5 k', exprString v ]
+              else
+                let
+                  k = if k' == "type" then "xtype" else k'
+                in
+                  exprOp
+                    (exprIdent ("D." <> ugggh <> dekuizeU k))
+                    [ binaryOp "!:=" (exprString v) ]
           in
             case attributes of
               Nil -> []
