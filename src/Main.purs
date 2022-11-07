@@ -76,8 +76,10 @@ toDeku l = replaceAll (Pattern ugggh) (Replacement "") $ print plainText
       )
       ( ( let
             transAp (HtmlAttribute k' v) =
-              if take 5 k' == "data-" then exprApp (exprIdent "xdata")
-                [ exprString $ drop 5 k', exprString v ]
+              if take 5 k' == "data-" then exprApp (exprIdent "pure")
+                [ exprApp (exprIdent "xdata")
+                    [ exprString $ drop 5 k', exprString v ]
+                ]
               else
                 let
                   k = if k' == "type" then "xtype" else k'
