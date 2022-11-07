@@ -4,7 +4,7 @@
   "description": "",
   "scripts": {
     "dev": "vite",
-    "build": "spago -x prod.dhall build && vite build"
+    "build": "spago -x prod.dhall build && vite build --base=/html2deku/"
   },
   "keywords": [],
   "author": "",
