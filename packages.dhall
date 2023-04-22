@@ -1,16 +1,9 @@
 let upstream =
-      https://github.com/purescript/package-sets/releases/download/psc-0.15.4-20221030/packages.dhall
-        sha256:19a962fbb4c04111c06bbb03b5ed58412dcb3beccbfd59ace970b73fdbaea20d
+      https://github.com/purescript/package-sets/releases/download/psc-0.15.8-20230420/packages.dhall
+        sha256:01f6ef030637be27a334e8f0977d563f9699543f596d60e8fb067e4f60d2e571
 
 in  upstream
-with hyrule =
-    { dependencies =
-      [ "st", "js-timers", "unsafe-reference"
-      ]
-    , repo = "https://github.com/mikesol/purescript-hyrule.git"
-    , version = "v2.3.3"
-    }
-  with tidy =
+with tidy =
     { dependencies =
       [ "maybe"
       ]
@@ -23,39 +16,4 @@ with hyrule =
       ]
     , repo = "https://github.com/natefaubion/purescript-tidy-codegen.git"
     , version = "v3.0.0"
-    }
-  with deku =
-    { dependencies =
-      [ "aff"
-      , "arrays"
-      , "bolson"
-      , "catenable-lists"
-      , "control"
-      , "effect"
-      , "either"
-      , "fast-vect"
-      , "filterable"
-      , "foldable-traversable"
-      , "foreign-object"
-      , "hyrule"
-      , "maybe"
-      , "newtype"
-      , "ordered-collections"
-      , "prelude"
-      , "profunctor"
-      , "quickcheck"
-      , "record"
-      , "safe-coerce"
-      , "st"
-      , "strings"
-      , "transformers"
-      , "tuples"
-      , "unsafe-coerce"
-      , "web-dom"
-      , "web-events"
-      , "web-html"
-      , "web-uievents"
-      ]
-    , repo = "https://github.com/mikesol/purescript-deku.git"
-    , version = "main"
     }

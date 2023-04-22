@@ -9,15 +9,14 @@ import Data.Array (intercalate, uncons)
 import Data.Array as A
 import Data.Compactable (compact)
 import Data.Either (Either(..))
-import Data.Foldable (oneOf)
 import Data.List (List(..))
+import Deku.Hooks (useState')
 import Data.Maybe (Maybe(..))
 import Data.String (Pattern(..), Replacement(..), replaceAll, split, drop, take)
 import Data.Tuple.Nested ((/\))
 import Deku.Attribute ((!:=), (:=))
 import Deku.Control (text_)
 import Deku.DOM as D
-import Deku.Do (useState')
 import Deku.Do as Deku
 import Deku.Listeners (click)
 import Deku.Toplevel (runInBody)
@@ -87,17 +86,13 @@ toDeku l = print plainText
           in
             case attributes of
               Nil -> []
-              Cons ha Nil ->
-                [ transAp ha ]
               _ ->
-                [ exprApp (exprIdent "oneOf")
-                    [ exprArray $ A.fromFoldable
+                [ exprArray $ A.fromFoldable
                         ( map
                             transAp
                             attributes
                         )
                     ]
-                ]
         ) <>
           [ exprArray (compact (map go (A.fromFoldable children))) ]
       )
@@ -123,11 +118,10 @@ main = runInBody Deku.do
   setPurs /\ purs <- useState'
   setInput /\ input <- useState'
   D.div
-    (oneOf [ D.Class !:= "w-full" ])
-    [ D.span (oneOf [ D.Class !:= "text-xl" ]) [ text_ "html2deku" ]
+    [ D.Class !:= "w-full" ]
+    [ D.span [ D.Class !:= "text-xl" ] [ text_ "html2deku" ]
     , D.button
-        ( oneOf
-            [ D.Class !:=
+        [ D.Class !:=
                 "ml-2 inline-flex items-center rounded border border-transparent bg-indigo-600 px-2.5 py-1.5 text-xs font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
             , click $ input <#> \i -> do
                 v <- value i
@@ -135,26 +129,21 @@ main = runInBody Deku.do
                 case parsed of
                   Left err -> swal { title: "Uh oh...", text: show err }
                   Right res -> setPurs (toDeku res)
-            ]
-        )
+        ]
         [ text_ "Convert >" ]
     , D.div
-        (oneOf [ D.Class !:= "w-full grid grid-cols-1 md:grid-cols-2 gap-4" ])
+        [ D.Class !:= "w-full grid grid-cols-1 md:grid-cols-2 gap-4" ]
         [ D.textarea
-            ( oneOf
-                [ D.Rows !:= "20"
+            [ D.Rows !:= "20"
                 , D.Class !:= "border-2"
                 , D.SelfT !:= setInput
-                ]
-            )
+            ]
             [ text_ initialTxt ]
         , D.textarea
-            ( oneOf
-                [ D.Rows !:= "20"
-                , D.Class !:= "border-2"
-                , purs <#> (D.Value := _)
-                ]
-            )
+            [ D.Rows !:= "20"
+            , D.Class !:= "border-2"
+            , purs <#> (D.Value := _)
+            ]
             ( let
                 parsed = HalogenParser.parse initialTxt
               in
