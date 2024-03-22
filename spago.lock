@@ -4,34 +4,32 @@ workspace:
       path: ./
       dependencies:
         - arrays
-        - console
         - control
-        - debug
-        - deku
         - deku-core
-        - deku-css
         - deku-dom
         - dodo-printer
         - effect
         - either
+        - exceptions
         - filterable
-        - foldable-traversable
         - functions
-        - language-cst-parser
         - lists
         - maybe
-        - parsing
         - partial
         - prelude
+        - random
         - string-parsers
         - strings
-        - strings-extra
         - tidy
         - tidy-codegen
         - tuples
         - web-html
       test_dependencies:
+        - aff
+        - console
+        - datetime
         - spec
+        - transformers
       build_plan:
         - aff
         - ansi
@@ -43,17 +41,12 @@ workspace:
         - bifunctors
         - bolson
         - catenable-lists
-        - colors
         - console
         - const
         - contravariant
         - control
-        - css
         - datetime
-        - debug
-        - deku
         - deku-core
-        - deku-css
         - deku-dom
         - distributive
         - dodo-printer
@@ -80,7 +73,6 @@ workspace:
         - js-timers
         - language-cst-parser
         - lazy
-        - lcg
         - lists
         - maybe
         - media-types
@@ -93,13 +85,10 @@ workspace:
         - ordered-collections
         - orders
         - parallel
-        - parsing
         - partial
         - pipes
         - prelude
         - profunctor
-        - quickcheck
-        - quickcheck-laws
         - random
         - record
         - refs
@@ -108,10 +97,8 @@ workspace:
         - st
         - string-parsers
         - strings
-        - strings-extra
         - stringutils
         - tailrec
-        - these
         - tidy
         - tidy-codegen
         - transformers
@@ -783,17 +770,6 @@ packages:
       - prelude
       - tuples
       - unfoldable
-  colors:
-    type: registry
-    version: 7.0.1
-    integrity: sha256-udlg/y2PFsHYli8Tgz8BQGGrOjyGo0BcJj36IfgYADs=
-    dependencies:
-      - arrays
-      - integers
-      - lists
-      - numbers
-      - partial
-      - strings
   console:
     type: registry
     version: 6.1.0
@@ -826,19 +802,6 @@ packages:
     dependencies:
       - newtype
       - prelude
-  css:
-    type: registry
-    version: 6.0.0
-    integrity: sha256-zfSHxgiU4rSWuVxMjSKKh+s7j433wxmsr+CqI6hm9s4=
-    dependencies:
-      - colors
-      - console
-      - effect
-      - nonempty
-      - profunctor
-      - strings
-      - these
-      - transformers
   datetime:
     type: registry
     version: 6.1.0
@@ -860,17 +823,6 @@ packages:
       - partial
       - prelude
       - tuples
-  debug:
-    type: registry
-    version: 6.0.2
-    integrity: sha256-vmkYFuXYuELBzeauvgHG6E6Kf/Hp1dAnxwE9ByHfwSg=
-    dependencies:
-      - functions
-      - prelude
-  deku:
-    type: local
-    path: /home/srghma/projects/purescript-deku/deku
-    dependencies: []
   deku-core:
     type: local
     path: /home/srghma/projects/purescript-deku/deku-core
@@ -905,18 +857,6 @@ packages:
       - web-dom
       - web-events
       - web-html
-  deku-css:
-    type: local
-    path: /home/srghma/projects/purescript-deku/deku-css
-    dependencies:
-      - css
-      - either
-      - filterable
-      - foreign-object
-      - maybe
-      - prelude
-      - strings
-      - tuples
   deku-dom:
     type: local
     path: /home/srghma/projects/purescript-deku/deku-dom
@@ -1254,17 +1194,6 @@ packages:
       - foldable-traversable
       - invariant
       - prelude
-  lcg:
-    type: registry
-    version: 4.0.0
-    integrity: sha256-h7ME5cthLfbgJOJdsZcSfFpwXsx4rf8YmhebU+3iSYg=
-    dependencies:
-      - effect
-      - integers
-      - maybe
-      - partial
-      - prelude
-      - random
   lists:
     type: registry
     version: 7.0.0
@@ -1385,36 +1314,6 @@ packages:
       - profunctor
       - refs
       - transformers
-  parsing:
-    type: registry
-    version: 10.2.0
-    integrity: sha256-ZDIdMFAKkst57x6BVa1aUWJnS8smoZnXsZ339Aq1mPA=
-    dependencies:
-      - arrays
-      - control
-      - effect
-      - either
-      - enums
-      - foldable-traversable
-      - functions
-      - identity
-      - integers
-      - lazy
-      - lists
-      - maybe
-      - newtype
-      - nullable
-      - numbers
-      - partial
-      - prelude
-      - st
-      - strings
-      - tailrec
-      - transformers
-      - tuples
-      - unfoldable
-      - unicode
-      - unsafe-coerce
   partial:
     type: registry
     version: 4.0.0
@@ -1450,45 +1349,6 @@ packages:
       - newtype
       - prelude
       - tuples
-  quickcheck:
-    type: registry
-    version: 8.0.1
-    integrity: sha256-ZvpccKQCvgslTXZCNmpYW4bUsFzhZd/kQUr2WmxFTGY=
-    dependencies:
-      - arrays
-      - console
-      - control
-      - effect
-      - either
-      - enums
-      - exceptions
-      - foldable-traversable
-      - gen
-      - identity
-      - integers
-      - lazy
-      - lcg
-      - lists
-      - maybe
-      - newtype
-      - nonempty
-      - numbers
-      - partial
-      - prelude
-      - record
-      - st
-      - strings
-      - tailrec
-      - transformers
-      - tuples
-      - unfoldable
-  quickcheck-laws:
-    type: registry
-    version: 7.0.0
-    integrity: sha256-rnzVTiDnymzYkvnhI8EvPwrmO8LgcTnrMTuiI172Tkc=
-    dependencies:
-      - enums
-      - quickcheck
   random:
     type: registry
     version: 6.0.0
@@ -1594,17 +1454,6 @@ packages:
       - tuples
       - unfoldable
       - unsafe-coerce
-  strings-extra:
-    type: registry
-    version: 4.0.0
-    integrity: sha256-tah7VFvEvFF4tpWXgWwGFIynpWHkYe5tpy6bWi5tMpU=
-    dependencies:
-      - arrays
-      - foldable-traversable
-      - maybe
-      - prelude
-      - strings
-      - unicode
   stringutils:
     type: registry
     version: 0.0.12
@@ -1629,17 +1478,6 @@ packages:
       - partial
       - prelude
       - refs
-  these:
-    type: registry
-    version: 6.0.0
-    integrity: sha256-6poQvFzGw7Ir9mTDEbFV9N6+cUeSHe0FdzTR2ZK1o6g=
-    dependencies:
-      - arrays
-      - gen
-      - lists
-      - quickcheck
-      - quickcheck-laws
-      - tuples
   tidy:
     type: local
     path: /home/srghma/projects/purescript-tidy/lib

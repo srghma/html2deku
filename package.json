@@ -4,7 +4,8 @@
   "description": "",
   "scripts": {
     "dev": "vite dev",
-    "build": "spago build && vite build --base=/html2deku/",
+    "preview": "vite preview ./dist --open --base=/html2deku/",
+    "build": "spago build --strict --censor-stats --pedantic-packages && purs-backend-es build && vite build --base=/html2deku/",
     "watch": "watchexec -e purs,js,yaml -- spago build",
     "format": "purs-tidy format-in-place src test",
     "check": "purs-tidy check src test"

@@ -2,28 +2,22 @@ package:
   name: html2deku
   dependencies:
     - arrays
-    - console
     - control
-    - debug
-    - deku
     - deku-core
-    - deku-css
     - deku-dom
     - dodo-printer
     - effect
     - either
+    - exceptions
     - filterable
-    - foldable-traversable
     - functions
-    - language-cst-parser
     - lists
     - maybe
-    - parsing
     - partial
     - prelude
+    - random
     - string-parsers
     - strings
-    - strings-extra
     - tidy
     - tidy-codegen
     - tuples
@@ -31,7 +25,11 @@ package:
   test:
     main: Test.Main
     dependencies:
+      - aff
+      - console
+      - datetime
       - spec
+      - transformers
 workspace:
   package_set:
     registry: 50.4.0
