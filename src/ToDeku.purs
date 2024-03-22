@@ -87,22 +87,22 @@ toDeku l = print plainText
                 let
                   k =
                     case k' of
-                        "type" -> "xtype"
-                        "class" -> "klass"
-                        _ -> k'
+                      "type" -> "xtype"
+                      "class" -> "klass"
+                      _ -> k'
                 in
                   exprApp (exprIdent ("DA." <> dekuizeLowercase k <> "_"))
-                      [ exprString v ]
+                    [ exprString v ]
           in
             case attributes of
               Nil -> []
               _ ->
                 [ exprArray $ A.fromFoldable
-                        ( map
-                            transAp
-                            attributes
-                        )
-                    ]
+                    ( map
+                        transAp
+                        attributes
+                    )
+                ]
         ) <>
           [ exprArray (compact (map go (A.fromFoldable children))) ]
       )
