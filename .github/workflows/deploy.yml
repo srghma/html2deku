@@ -1,3 +1,6 @@
+# DONT FORGET TO ENABLE GITHUB PAGES HERE https://github.com/$username/$repo/settings/pages
+# "Deploy from branch" -> gh-pages -> / (root)
+
 name: Build and Deploy
 on: [push]
 permissions:
