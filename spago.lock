@@ -73,6 +73,7 @@ workspace:
         - js-timers
         - language-cst-parser
         - lazy
+        - lcg
         - lists
         - maybe
         - media-types
@@ -89,6 +90,7 @@ workspace:
         - pipes
         - prelude
         - profunctor
+        - quickcheck
         - random
         - record
         - refs
@@ -600,23 +602,37 @@ workspace:
       zipperarray: 2.0.0
   extra_packages:
     bolson:
-      path: /home/srghma/projects/purescript-bolson
+      git: https://github.com/srghma/purescript-bolson.git
+      ref: main
     deku:
-      path: /home/srghma/projects/purescript-deku/deku
+      git: https://github.com/mikesol/purescript-deku.git
+      ref: main
+      subdir: deku
     deku-core:
-      path: /home/srghma/projects/purescript-deku/deku-core
+      git: https://github.com/mikesol/purescript-deku.git
+      ref: main
+      subdir: deku-core
     deku-css:
-      path: /home/srghma/projects/purescript-deku/deku-css
+      git: https://github.com/mikesol/purescript-deku.git
+      ref: main
+      subdir: deku-css
     deku-dom:
-      path: /home/srghma/projects/purescript-deku/deku-dom
+      git: https://github.com/mikesol/purescript-deku.git
+      ref: main
+      subdir: deku-dom
     dodo-printer:
-      path: /home/srghma/projects/purescript-dodo-printer
+      git: https://github.com/srghma/purescript-dodo-printer.git
+      ref: master
     hyrule:
-      path: /home/srghma/projects/purescript-hyrule
+      git: https://github.com/srghma/purescript-hyrule.git
+      ref: hyrule-master
     tidy:
-      path: /home/srghma/projects/purescript-tidy/lib
+      git: https://github.com/srghma/purescript-tidy.git
+      ref: main
+      subdir: lib
     tidy-codegen:
-      path: /home/srghma/projects/purescript-tidy-codegen
+      git: https://github.com/srghma/purescript-tidy-codegen.git
+      ref: main
 packages:
   aff:
     type: registry
@@ -741,8 +757,9 @@ packages:
       - prelude
       - tuples
   bolson:
-    type: local
-    path: /home/srghma/projects/purescript-bolson
+    type: git
+    url: https://github.com/srghma/purescript-bolson.git
+    rev: 926b84efcaf5175869ffd348937bdc79f7cd134e
     dependencies:
       - arrays
       - control
@@ -824,28 +841,30 @@ packages:
       - prelude
       - tuples
   deku-core:
-    type: local
-    path: /home/srghma/projects/purescript-deku/deku-core
+    type: git
+    url: https://github.com/mikesol/purescript-deku.git
+    rev: 1510c177cc3d7f0f28be8c799a4e087b1303da7e
+    subdir: deku-core
     dependencies:
+      - aff
       - arrays
       - bolson
       - catenable-lists
       - control
       - effect
       - either
-      - exceptions
       - fast-vect
       - filterable
       - foldable-traversable
       - foreign-object
+      - free
       - hyrule
-      - lists
       - maybe
       - newtype
-      - nonempty
       - ordered-collections
       - prelude
       - profunctor
+      - quickcheck
       - record
       - safe-coerce
       - st
@@ -857,22 +876,15 @@ packages:
       - web-dom
       - web-events
       - web-html
+      - web-uievents
   deku-dom:
-    type: local
-    path: /home/srghma/projects/purescript-deku/deku-dom
+    type: git
+    url: https://github.com/mikesol/purescript-deku.git
+    rev: 1510c177cc3d7f0f28be8c799a4e087b1303da7e
+    subdir: deku-dom
     dependencies:
-      - aff
       - deku-core
-      - effect
-      - foldable-traversable
       - hyrule
-      - maybe
-      - prelude
-      - record
-      - tuples
-      - unsafe-coerce
-      - web-dom
-      - web-events
       - web-html
       - web-pointerevents
       - web-touchevents
@@ -888,8 +900,9 @@ packages:
       - tuples
       - type-equality
   dodo-printer:
-    type: local
-    path: /home/srghma/projects/purescript-dodo-printer
+    type: git
+    url: https://github.com/srghma/purescript-dodo-printer.git
+    rev: 024eb31cabfe8f082d94b9147d5b97517e1aacbd
     dependencies:
       - ansi
       - either
@@ -1088,8 +1101,9 @@ packages:
       - tuples
       - unfoldable
   hyrule:
-    type: local
-    path: /home/srghma/projects/purescript-hyrule
+    type: git
+    url: https://github.com/srghma/purescript-hyrule.git
+    rev: 83c1dc03320e954684b1243c7104f5b6817f831c
     dependencies:
       - arrays
       - control
@@ -1194,6 +1208,17 @@ packages:
       - foldable-traversable
       - invariant
       - prelude
+  lcg:
+    type: registry
+    version: 4.0.0
+    integrity: sha256-h7ME5cthLfbgJOJdsZcSfFpwXsx4rf8YmhebU+3iSYg=
+    dependencies:
+      - effect
+      - integers
+      - maybe
+      - partial
+      - prelude
+      - random
   lists:
     type: registry
     version: 7.0.0
@@ -1349,6 +1374,38 @@ packages:
       - newtype
       - prelude
       - tuples
+  quickcheck:
+    type: registry
+    version: 8.0.1
+    integrity: sha256-ZvpccKQCvgslTXZCNmpYW4bUsFzhZd/kQUr2WmxFTGY=
+    dependencies:
+      - arrays
+      - console
+      - control
+      - effect
+      - either
+      - enums
+      - exceptions
+      - foldable-traversable
+      - gen
+      - identity
+      - integers
+      - lazy
+      - lcg
+      - lists
+      - maybe
+      - newtype
+      - nonempty
+      - numbers
+      - partial
+      - prelude
+      - record
+      - st
+      - strings
+      - tailrec
+      - transformers
+      - tuples
+      - unfoldable
   random:
     type: registry
     version: 6.0.0
@@ -1479,8 +1536,10 @@ packages:
       - prelude
       - refs
   tidy:
-    type: local
-    path: /home/srghma/projects/purescript-tidy/lib
+    type: git
+    url: https://github.com/srghma/purescript-tidy.git
+    rev: 83ec21015fe43f999882f547156e29dfcb0fd7d2
+    subdir: lib
     dependencies:
       - argonaut-codecs
       - argonaut-core
@@ -1501,8 +1560,9 @@ packages:
       - transformers
       - tuples
   tidy-codegen:
-    type: local
-    path: /home/srghma/projects/purescript-tidy-codegen
+    type: git
+    url: https://github.com/srghma/purescript-tidy-codegen.git
+    rev: cdbcd05a61223386699cc8b390996cbd1da08c7e
     dependencies:
       - arrays
       - bifunctors
